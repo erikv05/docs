@@ -1,0 +1,225 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Narrative API",
+    "description": "AI-powered product video thumbnail generation API",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "root",
+        "summary": "Root",
+        "description": "Returns welcome message and API information",
+        "tags": ["General"],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Welcome to Narrative API"
+                    },
+                    "version": {
+                      "type": "string",
+                      "example": "0.1.0"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "example": "/docs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "healthCheck",
+        "summary": "Health Check",
+        "description": "Check API server status",
+        "tags": ["Health"],
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "healthy"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "API is running"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analysis/dynamic-thumbnails": {
+      "post": {
+        "operationId": "dynamicThumbnails",
+        "summary": "Generate Dynamic Thumbnails",
+        "description": "Generate product thumbnails from a video URL using AI-powered frame selection. Analyzes video, samples frames, preprocesses and then selects best frames, returns base64-encoded JPEGs.",
+        "tags": ["Analysis"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DynamicThumbnailRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thumbnails generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThumbnailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid video URL or unsupported format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Model internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/thumbnails/generate": {
+      "post": {
+        "operationId": "generateThumbnails",
+        "summary": "Generate Thumbnails from Upload",
+        "description": "Generate product thumbnails from uploaded video file. Returns 3 thumbnails for videos ≤15s, 5 thumbnails for videos >15s.",
+        "tags": ["Thumbnails"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "video": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "Video file to process"
+                  }
+                },
+                "required": ["video"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Thumbnails generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThumbnailResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to generate thumbnails",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DynamicThumbnailRequest": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "description": "S3 signed URL or public URL of the video",
+            "example": "https://your-s3-url.com/video.mp4"
+          }
+        },
+        "required": ["video_url"]
+      },
+      "ThumbnailResponse": {
+        "type": "object",
+        "properties": {
+          "thumbnails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Base64-encoded JPEG images",
+            "minItems": 1,
+            "maxItems": 5,
+            "example": ["/9j/4AAQSkZJRgABAQAAAQABAAD...", "/9j/4AAQSkZJRgABAQAAAQABAAD...", "/9j/4AAQSkZJRgABAQAAAQABAAD..."]
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of thumbnails returned",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 3
+          }
+        },
+        "required": ["thumbnails", "count"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}

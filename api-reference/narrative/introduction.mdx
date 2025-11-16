@@ -1,0 +1,49 @@
+---
+title: 'Introduction'
+description: 'Narrative API - AI-powered product video thumbnail generation'
+---
+
+## Overview
+
+Narrative API generates AI-powered product thumbnails from videos
+
+**Key Features:**
+- Video processing with dynamic frame sampling (~100 frames)
+- AI-powered frame selection
+- GPU-accelerated video decoding (CUDA)
+- Base64-encoded JPEG output (95% quality)
+- Returns 3 thumbnails for ≤15s videos, 5 for >15s
+
+<Card
+  title="Narrative OpenAPI Spec"
+  icon="file-code"
+  href="/api-reference/narrative-openapi.json"
+>
+  View the OpenAPI specification file
+</Card>
+
+## Base URL
+
+```
+http://localhost:8000
+```
+
+## Quick Start
+
+```bash
+# Install dependencies
+make install
+
+# Set environment
+export GOOGLE_API_KEY='your-key'
+
+# Run server
+make dev
+```
+
+## Processing Pipeline
+
+1. Download/receive video
+2. AI selects best frames
+3. Extracted as full-resolution frames
+4. Return base64 JPEGs
