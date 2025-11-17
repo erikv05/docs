@@ -3,10 +3,12 @@
   "theme": "mint",
   "name": "Narrative API",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#1a1a1a",
+    "light": "#FFFFFF",
+    "dark": "#1a1a1a"
+
   },
+  "customCss": "/custom.css",
   "favicon": "/favicon.svg",
   "openapi": ["/api-reference/narrative-openapi.json"],
   "navigation": {
