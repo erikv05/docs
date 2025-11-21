@@ -12,97 +12,11 @@
     }
   ],
   "paths": {
-    "/": {
-      "get": {
-        "operationId": "root",
-        "summary": "Root Endpoint",
-        "description": "Returns welcome message with API information",
-        "tags": ["General"],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Welcome to Instinct API"
-                    },
-                    "version": {
-                      "type": "string",
-                      "example": "1.0.0"
-                    },
-                    "docs": {
-                      "type": "string",
-                      "example": "/docs"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/health": {
-      "get": {
-        "operationId": "healthCheck",
-        "summary": "Health Check",
-        "description": "Quick health check to verify the API is running properly",
-        "tags": ["Health"],
-        "responses": {
-          "200": {
-            "description": "API is healthy",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "healthy"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/healthz": {
-      "get": {
-        "operationId": "healthCheckVersioned",
-        "summary": "Health Check (Versioned)",
-        "description": "Versioned health check endpoint",
-        "tags": ["Health"],
-        "responses": {
-          "200": {
-            "description": "API is healthy",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "healthy"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/editing/generate-shortform-edit": {
       "post": {
         "operationId": "generateShortformEdit",
         "summary": "Generate Shortform Edit",
-        "description": "Takes a video URL, analyzes it with AI, removes unwanted parts (retakes, pauses, filler), and returns an edited video with optional captions",
+        "description": "Takes a video URL, analyzes it with AI, removes unwanted parts (retakes, pauses, filler), and returns an edited video",
         "tags": ["Editing"],
         "requestBody": {
           "required": true,
@@ -159,88 +73,9 @@
             "format": "uri",
             "description": "Link to the video file",
             "example": "https://example.com/video.mp4"
-          },
-          "min_pause_duration_ms": {
-            "type": "integer",
-            "description": "How long a pause needs to be before it gets cut (milliseconds)",
-            "minimum": 100,
-            "maximum": 5000,
-            "default": 1000,
-            "example": 1000
-          },
-          "aggressive_cutting": {
-            "type": "boolean",
-            "description": "Remove more pauses for faster-paced content",
-            "default": false,
-            "example": false
-          },
-          "add_captions": {
-            "type": "boolean",
-            "description": "Add TikTok-style captions to the video",
-            "default": false,
-            "example": true
-          },
-          "caption_style": {
-            "$ref": "#/components/schemas/CaptionStyle"
           }
         },
         "required": ["video_url"]
-      },
-      "CaptionStyle": {
-        "type": "object",
-        "description": "Customization options for caption appearance",
-        "properties": {
-          "font_size": {
-            "type": "integer",
-            "description": "Caption text size",
-            "minimum": 20,
-            "maximum": 200,
-            "default": 45,
-            "example": 50
-          },
-          "font_color": {
-            "type": "string",
-            "description": "Text color (hex or name)",
-            "default": "white",
-            "example": "white"
-          },
-          "stroke_color": {
-            "type": "string",
-            "description": "Outline color",
-            "default": "black",
-            "example": "black"
-          },
-          "stroke_width": {
-            "type": "integer",
-            "description": "Outline thickness",
-            "minimum": 0,
-            "maximum": 20,
-            "default": 3,
-            "example": 3
-          },
-          "position_y_percent": {
-            "type": "number",
-            "description": "Vertical position (0=top, 1=bottom)",
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "default": 0.45,
-            "example": 0.45
-          },
-          "max_chars_per_line": {
-            "type": "integer",
-            "description": "Text wrapping limit",
-            "minimum": 10,
-            "maximum": 100,
-            "default": 30,
-            "example": 30
-          },
-          "uppercase": {
-            "type": "boolean",
-            "description": "Convert text to UPPERCASE",
-            "default": true,
-            "example": true
-          }
-        }
       },
       "ShortformEditResponse": {
         "type": "object",
@@ -265,57 +100,9 @@
             "type": "number",
             "description": "How much was cut (as percentage)",
             "example": 33.33
-          },
-          "segments": {
-            "type": "array",
-            "description": "List of kept video segments with timing info",
-            "items": {
-              "$ref": "#/components/schemas/VideoSegment"
-            }
-          },
-          "analysis": {
-            "type": "string",
-            "description": "AI's explanation of what it did",
-            "example": "Removed 3 long pauses and 2 retake sections. Applied TikTok-style captions for improved engagement."
           }
         },
-        "required": ["video_url", "original_duration_ms", "edited_duration_ms", "reduction_percent", "segments", "analysis"]
-      },
-      "VideoSegment": {
-        "type": "object",
-        "description": "Information about a kept video segment",
-        "properties": {
-          "start_ms": {
-            "type": "integer",
-            "description": "Segment start time in milliseconds",
-            "example": 0
-          },
-          "end_ms": {
-            "type": "integer",
-            "description": "Segment end time in milliseconds",
-            "example": 5000
-          },
-          "start_s": {
-            "type": "number",
-            "description": "Segment start time in seconds",
-            "example": 0.0
-          },
-          "end_s": {
-            "type": "number",
-            "description": "Segment end time in seconds",
-            "example": 5.0
-          },
-          "duration_ms": {
-            "type": "integer",
-            "description": "Segment duration in milliseconds",
-            "example": 5000
-          },
-          "reason": {
-            "type": "string",
-            "description": "Reason for keeping this part",
-            "example": "Clear introduction"
-          }
-        }
+        "required": ["video_url", "original_duration_ms", "edited_duration_ms", "reduction_percent"]
       },
       "Error": {
         "type": "object",

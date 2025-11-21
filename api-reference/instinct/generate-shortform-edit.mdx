@@ -14,20 +14,6 @@ Takes a video URL, analyzes it with AI, removes unwanted parts (retakes, pauses,
 |-----------|------|----------|----------------------------|
 | video_url | URL  | ✅ Yes    | Link to the video file     |
 
-### Caption Style Options
-
-When `add_captions` is set to `true`, you can customize the caption appearance:
-
-| Parameter          | Type    | Default | Range   | Description                                      |
-|--------------------|---------|---------|---------|--------------------------------------------------|
-| font_size          | Number  | 45      | 20-200  | Caption text size                                |
-| font_color         | String  | "white" | -       | Text color (hex or name)                         |
-| stroke_color       | String  | "black" | -       | Outline color                                    |
-| stroke_width       | Number  | 3       | 0-20    | Outline thickness                                |
-| position_y_percent | Number  | 0.45    | 0.0-1.0 | Vertical position (0=top, 1=bottom)              |
-| max_chars_per_line | Number  | 30      | 10-100  | Text wrapping limit                              |
-| uppercase          | Boolean | true    | -       | Convert text to UPPERCASE                        |
-
 ### Response
 
 | Field                | Description                                       |
@@ -36,15 +22,6 @@ When `add_captions` is set to `true`, you can customize the caption appearance:
 | original_duration_ms | How long the original video was (milliseconds)    |
 | edited_duration_ms   | How long the edited video is (milliseconds)       |
 | reduction_percent    | How much was cut (as percentage)                  |
-| segments             | List of kept video segments with timing info      |
-| analysis             | AI's explanation of what it did                   |
-
-### Segment Information
-
-Each segment in the `segments` array includes:
-- Start/end times (in milliseconds and seconds)
-- Duration
-- Reason for keeping this part
 
 ### Example Request
 
@@ -63,26 +40,7 @@ curl -X POST https://api.instinct.com/api/v1/editing/generate-shortform-edit \
   "video_url": "https://cdn.instinct.com/edited/video_123.mp4",
   "original_duration_ms": 180000,
   "edited_duration_ms": 120000,
-  "reduction_percent": 33.33,
-  "segments": [
-    {
-      "start_ms": 0,
-      "end_ms": 5000,
-      "start_s": 0.0,
-      "end_s": 5.0,
-      "duration_ms": 5000,
-      "reason": "Clear introduction"
-    },
-    {
-      "start_ms": 8000,
-      "end_ms": 15000,
-      "start_s": 8.0,
-      "end_s": 15.0,
-      "duration_ms": 7000,
-      "reason": "Main content delivery"
-    }
-  ],
-  "analysis": "Removed 3 long pauses and 2 retake sections. Applied TikTok-style captions for improved engagement."
+  "reduction_percent": 33.33
 }
 ```
 
@@ -90,5 +48,3 @@ curl -X POST https://api.instinct.com/api/v1/editing/generate-shortform-edit \
 
 - The edited video URL is valid for 24 hours
 - Processing time varies based on video length
-- Larger `min_pause_duration_ms` values result in less aggressive cutting
-- `aggressive_cutting` mode is recommended for fast-paced social media content
