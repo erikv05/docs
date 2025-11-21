@@ -10,10 +10,6 @@
   },
   "customCss": "/custom.css",
   "favicon": "/favicon.svg",
-  "modeToggle": {
-    "default": "dark",
-    "isHidden": true
-  },
   "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json"],
   "navigation": {
     "tabs": [
