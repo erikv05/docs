@@ -1,20 +1,5 @@
-body {
-  background-color: #000000 !important;
-}
-
-html {
-  background-color: #000000 !important;
-}
-
-.main-content,
-main,
-#__next {
-  background-color: #000000 !important;
-}
-
 /* Hide dark mode toggle button */
 button[aria-label*="dark mode"] {
   display: none !important;
 }
-
 
