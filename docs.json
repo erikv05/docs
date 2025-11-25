@@ -10,7 +10,7 @@
   },
   "customCss": "/custom.css",
   "favicon": "/favicon.svg",
-  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json"],
+  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json"],
   "navigation": {
     "tabs": [
       {
@@ -39,6 +39,53 @@
             "group": "Endpoints",
             "pages": [
               "api-reference/instinct/generate-shortform-edit"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Clipping API",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/clipping/introduction"
+            ]
+          },
+          {
+            "group": "Highlights",
+            "pages": [
+              "api-reference/clipping/generate-highlights"
+            ]
+          },
+          {
+            "group": "Hooks",
+            "pages": [
+              "api-reference/clipping/prepare-video",
+              "api-reference/clipping/generate-hook"
+            ]
+          },
+          {
+            "group": "Search",
+            "pages": [
+              "api-reference/clipping/create-index",
+              "api-reference/clipping/upload-to-index",
+              "api-reference/clipping/delete-from-index",
+              "api-reference/clipping/search-clips"
+            ]
+          },
+          {
+            "group": "Analysis",
+            "pages": [
+              "api-reference/clipping/summarize-video",
+              "api-reference/clipping/extract-transcript"
+            ]
+          },
+          {
+            "group": "Vision",
+            "pages": [
+              "api-reference/clipping/detect-rois",
+              "api-reference/clipping/extract-metadata"
             ]
           }
         ]

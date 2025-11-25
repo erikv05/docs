@@ -1,0 +1,51 @@
+---
+title: 'Create Index'
+description: 'Create a new search index for video clips'
+openapi: 'POST /api/v1/search/indexes'
+---
+
+## POST /api/v1/search/indexes
+
+Create a new search index for organizing and searching video clips. Indexes allow you to group related videos and search across them with natural language queries.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| name | string | Yes | Name for the search index |
+| description | string | No | Optional description of the index |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| index_id | Unique identifier for the index |
+| name | Name of the index |
+| created_at | ISO timestamp of when the index was created |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/search/indexes \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sports Highlights Q4 2024",
+    "description": "Collection of NFL game highlights from Q4 2024"
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "index_id": "idx_abc123xyz",
+  "name": "Sports Highlights Q4 2024",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+### Notes
+
+- Index names should be descriptive for easy organization
+- Use the returned `index_id` for uploading files and searching
+- There is no limit to the number of indexes you can create

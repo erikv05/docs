@@ -1,0 +1,59 @@
+---
+title: 'Introduction'
+description: 'AI-powered video clipping, search, and analysis APIs'
+---
+
+## Clipping API
+
+The Clipping API provides a comprehensive suite of tools for AI-powered video processing, from generating highlight reels to searching video content with natural language.
+
+### Key Features
+
+- **Highlight Generation** - Automatically create highlight reels from long-form video content
+- **Hook Creation** - Generate engaging social media hooks with cliffhangers
+- **Video Search** - Index and search video content using natural language queries
+- **Summarization** - Generate AI-powered summaries in multiple formats
+- **Transcription** - Extract audio-visual transcripts with timestamps and speaker diarization
+
+### Base URL
+
+```
+https://api.usenarrative.ai
+```
+
+### API Groups
+
+| Group | Description |
+|-------|-------------|
+| **Highlights** | Generate highlight reels from long-form content (sports, events) |
+| **Hooks** | Create engaging hooks from episodic content (TV series, podcasts) |
+| **Search** | Index and search video clips with natural language |
+| **Analysis** | Summarize videos and extract transcripts |
+| **Vision** | Detect ROIs and extract structured metadata from video frames |
+
+### Quick Start
+
+1. **Generate Highlights** - Upload a video and get an AI-curated highlight reel
+2. **Create Hooks** - Prepare episodes and generate social media hooks
+3. **Search Content** - Create an index, upload videos, and search with natural language
+4. **Analyze Videos** - Get summaries or full transcripts
+5. **Vision Pipeline** - Detect on-screen elements and extract structured metadata
+
+### Enhanced Highlights Workflow
+
+For maximum accuracy with broadcast video (sports, news, live events), use the Vision pipeline:
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌────────────────────┐
+│  Detect ROIs    │ ──▶ │ Extract Metadata │ ──▶ │ Generate Highlights│
+│  (calibration)  │     │  (play-by-play)  │     │   (with metadata)  │
+└─────────────────┘     └──────────────────┘     └────────────────────┘
+```
+
+1. **Detect ROIs** - AI identifies scoreboard, clock, and HUD elements
+2. **Extract Metadata** - Monitor video and generate timestamped events
+3. **Generate Highlights** - Use metadata for precise, context-aware clips
+
+<Card title="OpenAPI Specification" icon="file-code" href="/api-reference/clipping-openapi.json">
+  View the full OpenAPI specification
+</Card>

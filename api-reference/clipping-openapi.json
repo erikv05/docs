@@ -1,0 +1,1278 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Clipping API",
+    "description": "AI-powered video clipping, search, and analysis API suite",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.usenarrative.ai",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api/v1/highlights/generate": {
+      "post": {
+        "operationId": "generateHighlights",
+        "summary": "Generate Highlights",
+        "description": "Generate a highlight reel from a full-length video using AI-powered analysis. Ideal for sports content like football games.",
+        "tags": ["Highlights"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/HighlightsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Highlights generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HighlightsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/hooks/prepare": {
+      "post": {
+        "operationId": "prepareVideo",
+        "summary": "Prepare Video",
+        "description": "Prepare multiple episode files into a continuous video with smart transitions. Removes freeze frames and overlapping content between episodes.",
+        "tags": ["Hooks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepareVideoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Video prepared successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrepareVideoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/hooks/generate": {
+      "post": {
+        "operationId": "generateHook",
+        "summary": "Generate Hook",
+        "description": "Generate an engaging hook from prepared video content. Supports multiple hook types optimized for social media engagement.",
+        "tags": ["Hooks"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateHookRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Hook generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateHookResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes": {
+      "post": {
+        "operationId": "createIndex",
+        "summary": "Create Index",
+        "description": "Create a new search index for organizing and searching video clips.",
+        "tags": ["Search"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIndexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Index created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateIndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes/{index_id}/upload": {
+      "post": {
+        "operationId": "uploadToIndex",
+        "summary": "Upload to Index",
+        "description": "Upload video files to an existing search index. Files are processed and indexed for semantic search.",
+        "tags": ["Search"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index to upload to",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadToIndexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Files uploaded and indexed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadToIndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes/{index_id}/items/{item_id}": {
+      "delete": {
+        "operationId": "deleteFromIndex",
+        "summary": "Delete from Index",
+        "description": "Remove a specific item (video or clip) from a search index.",
+        "tags": ["Search"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the item to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFromIndexResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index or item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/query": {
+      "post": {
+        "operationId": "searchClips",
+        "summary": "Search Clips",
+        "description": "Search for video clips using natural language queries. Returns relevant clips with timestamps and relevance scores.",
+        "tags": ["Search"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchClipsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchClipsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/summarize": {
+      "post": {
+        "operationId": "summarizeVideo",
+        "summary": "Summarize Video",
+        "description": "Generate an AI-powered summary of video content. Supports multiple output formats including bullet points, paragraphs, and chapters.",
+        "tags": ["Analysis"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SummarizeVideoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Video summarized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SummarizeVideoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/transcript": {
+      "post": {
+        "operationId": "extractTranscript",
+        "summary": "Extract Transcript",
+        "description": "Extract audio-visual transcript from video with word-level timestamps and optional speaker diarization.",
+        "tags": ["Analysis"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractTranscriptRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transcript extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractTranscriptResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vision/detect-rois": {
+      "post": {
+        "operationId": "detectRois",
+        "summary": "Detect ROIs",
+        "description": "Use AI vision to detect regions of interest (ROIs) in a video frame based on a text description or schema. Ideal for identifying HUD elements, overlays, or specific visual components in broadcast video.",
+        "tags": ["Vision"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectRoisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ROIs detected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectRoisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vision/extract-metadata": {
+      "post": {
+        "operationId": "extractMetadata",
+        "summary": "Extract Metadata",
+        "description": "Extract structured metadata from video using provided ROI configuration. Monitors video frames and extracts data matching a provided schema (e.g., play-by-play events, score changes, game state).",
+        "tags": ["Vision"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractMetadataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata extracted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtractMetadataResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HighlightsRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file (1-2 hours, e.g., full football game)"
+          },
+          "metadata": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional play metadata JSON file for enhanced accuracy"
+          },
+          "editorial_instructions": {
+            "type": "string",
+            "description": "Custom instructions for highlight selection (e.g., 'Include crowd reactions')",
+            "example": "Focus on touchdowns and big plays"
+          }
+        },
+        "required": ["video"]
+      },
+      "HighlightsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Status of the operation",
+            "example": "success"
+          },
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "CDN URL to the generated highlight reel (valid for 24 hours)",
+            "example": "https://cdn.usenarrative.ai/highlights/video_abc123.mp4"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable status message",
+            "example": "Highlight reel generated successfully"
+          },
+          "original_duration_sec": {
+            "type": "number",
+            "description": "Duration of the original video in seconds",
+            "example": 7200
+          },
+          "edited_duration_sec": {
+            "type": "number",
+            "description": "Duration of the highlight reel in seconds",
+            "example": 900
+          }
+        },
+        "required": ["status", "video_url", "message"]
+      },
+      "PrepareVideoRequest": {
+        "type": "object",
+        "properties": {
+          "videos": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "description": "Episode video files to merge into continuous video"
+          }
+        },
+        "required": ["videos"]
+      },
+      "PrepareVideoResponse": {
+        "type": "object",
+        "properties": {
+          "continuous_video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the merged continuous video",
+            "example": "https://cdn.usenarrative.ai/prepared/continuous_abc123.mp4"
+          },
+          "transcript_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the transcript JSON file",
+            "example": "https://cdn.usenarrative.ai/prepared/transcript_abc123.json"
+          },
+          "total_duration_sec": {
+            "type": "number",
+            "description": "Total duration of the continuous video in seconds",
+            "example": 5234.5
+          },
+          "episodes_processed": {
+            "type": "integer",
+            "description": "Number of episodes that were merged",
+            "example": 3
+          }
+        },
+        "required": ["continuous_video_url", "transcript_url", "total_duration_sec", "episodes_processed"]
+      },
+      "GenerateHookRequest": {
+        "type": "object",
+        "properties": {
+          "continuous_video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the prepared continuous video",
+            "example": "https://cdn.usenarrative.ai/prepared/continuous_abc123.mp4"
+          },
+          "transcript_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the transcript JSON file",
+            "example": "https://cdn.usenarrative.ai/prepared/transcript_abc123.json"
+          },
+          "hook_type": {
+            "type": "string",
+            "enum": ["fine_cut", "compilation", "narration"],
+            "description": "Type of hook to generate",
+            "example": "fine_cut"
+          }
+        },
+        "required": ["continuous_video_url", "transcript_url", "hook_type"]
+      },
+      "GenerateHookResponse": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the generated hook video",
+            "example": "https://cdn.usenarrative.ai/hooks/hook_abc123.mp4"
+          },
+          "hook_duration_sec": {
+            "type": "number",
+            "description": "Duration of the hook in seconds",
+            "example": 35.5
+          },
+          "cliffhanger_timestamp_sec": {
+            "type": "number",
+            "description": "Timestamp where the video cuts to cliffhanger",
+            "example": 756.8
+          },
+          "hook_type": {
+            "type": "string",
+            "enum": ["fine_cut", "compilation", "narration"],
+            "description": "Type of hook that was generated",
+            "example": "fine_cut"
+          }
+        },
+        "required": ["video_url", "hook_duration_sec", "cliffhanger_timestamp_sec", "hook_type"]
+      },
+      "CreateIndexRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the search index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the index",
+            "example": "Collection of NFL game highlights from Q4 2024"
+          }
+        },
+        "required": ["name"]
+      },
+      "CreateIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "Unique identifier for the index",
+            "example": "idx_abc123xyz"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO timestamp of when the index was created",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": ["index_id", "name", "created_at"]
+      },
+      "UploadToIndexRequest": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "description": "Video files to upload and index"
+          }
+        },
+        "required": ["files"]
+      },
+      "UploadToIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index that was updated",
+            "example": "idx_abc123xyz"
+          },
+          "files_processed": {
+            "type": "integer",
+            "description": "Number of files that were processed",
+            "example": 5
+          },
+          "clips_indexed": {
+            "type": "integer",
+            "description": "Total number of searchable clips created",
+            "example": 127
+          }
+        },
+        "required": ["index_id", "files_processed", "clips_indexed"]
+      },
+      "DeleteFromIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index",
+            "example": "idx_abc123xyz"
+          },
+          "item_id": {
+            "type": "string",
+            "description": "ID of the deleted item",
+            "example": "item_def456"
+          },
+          "clips_removed": {
+            "type": "integer",
+            "description": "Number of clips removed from the index",
+            "example": 23
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation message",
+            "example": "Item successfully deleted from index"
+          }
+        },
+        "required": ["index_id", "item_id", "clips_removed", "message"]
+      },
+      "SearchClipsRequest": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index to search",
+            "example": "idx_abc123xyz"
+          },
+          "query": {
+            "type": "string",
+            "description": "Natural language search query",
+            "example": "touchdown celebrations"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "default": 10,
+            "example": 10
+          }
+        },
+        "required": ["index_id", "query"]
+      },
+      "SearchClipsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResult"
+            },
+            "description": "Array of matching clips"
+          }
+        },
+        "required": ["results"]
+      },
+      "SearchResult": {
+        "type": "object",
+        "properties": {
+          "clip_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the video clip",
+            "example": "https://cdn.usenarrative.ai/clips/clip_abc123.mp4"
+          },
+          "start_time_sec": {
+            "type": "number",
+            "description": "Start time of the clip in the source video",
+            "example": 145.5
+          },
+          "end_time_sec": {
+            "type": "number",
+            "description": "End time of the clip in the source video",
+            "example": 158.2
+          },
+          "relevance_score": {
+            "type": "number",
+            "description": "Relevance score from 0 to 1",
+            "example": 0.92
+          },
+          "transcript_snippet": {
+            "type": "string",
+            "description": "Transcript excerpt from the clip",
+            "example": "And he's in for the touchdown! What a play!"
+          }
+        },
+        "required": ["clip_url", "start_time_sec", "end_time_sec", "relevance_score"]
+      },
+      "SummarizeVideoRequest": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the video to summarize",
+            "example": "https://example.com/video.mp4"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["bullet_points", "paragraph", "chapters"],
+            "description": "Output format for the summary",
+            "default": "paragraph",
+            "example": "chapters"
+          }
+        },
+        "required": ["video_url"]
+      },
+      "SummarizeVideoResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "string",
+            "description": "Generated summary text",
+            "example": "This video covers the key moments from the championship game..."
+          },
+          "chapters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Chapter"
+            },
+            "description": "Chapter breakdown (only present when format=chapters)"
+          },
+          "duration_sec": {
+            "type": "number",
+            "description": "Duration of the video in seconds",
+            "example": 3600
+          }
+        },
+        "required": ["summary", "duration_sec"]
+      },
+      "Chapter": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Chapter title",
+            "example": "Opening Kickoff"
+          },
+          "start_time_sec": {
+            "type": "number",
+            "description": "Start time of the chapter in seconds",
+            "example": 0
+          },
+          "end_time_sec": {
+            "type": "number",
+            "description": "End time of the chapter in seconds",
+            "example": 420
+          }
+        },
+        "required": ["title", "start_time_sec", "end_time_sec"]
+      },
+      "ExtractTranscriptRequest": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the video to transcribe",
+            "example": "https://example.com/video.mp4"
+          },
+          "include_speakers": {
+            "type": "boolean",
+            "description": "Include speaker diarization",
+            "default": false,
+            "example": true
+          },
+          "include_timestamps": {
+            "type": "boolean",
+            "description": "Include word-level timestamps",
+            "default": true,
+            "example": true
+          }
+        },
+        "required": ["video_url"]
+      },
+      "ExtractTranscriptResponse": {
+        "type": "object",
+        "properties": {
+          "transcript": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TranscriptSegment"
+            },
+            "description": "Array of transcript segments with timestamps"
+          },
+          "full_text": {
+            "type": "string",
+            "description": "Complete transcript as plain text",
+            "example": "Welcome to the game. Today we have an exciting matchup..."
+          },
+          "duration_sec": {
+            "type": "number",
+            "description": "Duration of the video in seconds",
+            "example": 3600
+          }
+        },
+        "required": ["transcript", "full_text", "duration_sec"]
+      },
+      "TranscriptSegment": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Transcript text for this segment",
+            "example": "Welcome to the game."
+          },
+          "start_time_sec": {
+            "type": "number",
+            "description": "Start time of the segment in seconds",
+            "example": 0.5
+          },
+          "end_time_sec": {
+            "type": "number",
+            "description": "End time of the segment in seconds",
+            "example": 2.1
+          },
+          "speaker": {
+            "type": "string",
+            "description": "Speaker identifier (only present when include_speakers=true)",
+            "example": "Speaker 1"
+          }
+        },
+        "required": ["text", "start_time_sec", "end_time_sec"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Invalid video URL provided"
+          }
+        }
+      },
+      "DetectRoisRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file to analyze (a frame will be extracted for calibration)"
+          },
+          "frame_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alternative: URL to a specific frame/image to analyze"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoiElement"
+            },
+            "description": "List of elements to detect with their descriptions",
+            "example": [
+              {"name": "play_clock", "description": "The small box showing the play clock (typically 25-40 seconds)"},
+              {"name": "game_clock", "description": "The quarter time remaining (e.g., '12:35')"},
+              {"name": "home_score", "description": "The home team's score"},
+              {"name": "away_score", "description": "The away team's score"}
+            ]
+          },
+          "frame_number": {
+            "type": "integer",
+            "description": "Which frame to extract from video for calibration (default: 300, ~10 seconds in)",
+            "default": 300,
+            "example": 300
+          }
+        },
+        "required": ["elements"]
+      },
+      "RoiElement": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Identifier for this ROI element",
+            "example": "play_clock"
+          },
+          "description": {
+            "type": "string",
+            "description": "Natural language description of what to detect",
+            "example": "The small box showing the play clock (typically 25-40 seconds)"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this element must be found",
+            "default": true
+          }
+        },
+        "required": ["name", "description"]
+      },
+      "DetectRoisResponse": {
+        "type": "object",
+        "properties": {
+          "roi_config": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "description": "Detected ROI coordinates keyed by element name",
+            "example": {
+              "play_clock": {"y_min": 45, "x_min": 580, "y_max": 75, "x_max": 640},
+              "game_clock": {"y_min": 45, "x_min": 480, "y_max": 75, "x_max": 560},
+              "home_score": {"y_min": 45, "x_min": 200, "y_max": 75, "x_max": 250},
+              "away_score": {"y_min": 45, "x_min": 300, "y_max": 75, "x_max": 350}
+            }
+          },
+          "calibration_frame_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the frame used for calibration",
+            "example": "https://cdn.usenarrative.ai/calibration/frame_abc123.jpg"
+          },
+          "visualization_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to annotated frame showing detected ROIs",
+            "example": "https://cdn.usenarrative.ai/calibration/viz_abc123.jpg"
+          }
+        },
+        "required": ["roi_config", "calibration_frame_url", "visualization_url"]
+      },
+      "BoundingBox": {
+        "type": "object",
+        "properties": {
+          "y_min": {
+            "type": "integer",
+            "description": "Top edge Y coordinate (pixels from top)",
+            "example": 45
+          },
+          "x_min": {
+            "type": "integer",
+            "description": "Left edge X coordinate (pixels from left)",
+            "example": 580
+          },
+          "y_max": {
+            "type": "integer",
+            "description": "Bottom edge Y coordinate",
+            "example": 75
+          },
+          "x_max": {
+            "type": "integer",
+            "description": "Right edge X coordinate",
+            "example": 640
+          }
+        },
+        "required": ["y_min", "x_min", "y_max", "x_max"]
+      },
+      "ExtractMetadataRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file to process"
+          },
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alternative: URL to video file"
+          },
+          "roi_config": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "description": "ROI configuration from detect-rois endpoint"
+          },
+          "output_schema": {
+            "type": "object",
+            "description": "JSON Schema defining the structure of events to extract",
+            "example": {
+              "type": "object",
+              "properties": {
+                "event_type": {"type": "string", "enum": ["play_start", "play_end", "score_change"]},
+                "timestamp_sec": {"type": "number"},
+                "game_clock": {"type": "string"},
+                "home_score": {"type": "integer"},
+                "away_score": {"type": "integer"}
+              }
+            }
+          },
+          "skip_frames": {
+            "type": "integer",
+            "description": "Process every Nth frame for faster processing",
+            "default": 2,
+            "example": 2
+          }
+        },
+        "required": ["roi_config", "output_schema"]
+      },
+      "ExtractMetadataResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of extracted events matching the provided schema"
+          },
+          "metadata_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to download the full metadata JSON file",
+            "example": "https://cdn.usenarrative.ai/metadata/events_abc123.json"
+          },
+          "video_duration_sec": {
+            "type": "number",
+            "description": "Duration of processed video in seconds",
+            "example": 7200
+          },
+          "events_detected": {
+            "type": "integer",
+            "description": "Total number of events detected",
+            "example": 142
+          },
+          "processing_stats": {
+            "$ref": "#/components/schemas/ProcessingStats"
+          }
+        },
+        "required": ["events", "metadata_url", "video_duration_sec", "events_detected"]
+      },
+      "ProcessingStats": {
+        "type": "object",
+        "properties": {
+          "frames_processed": {
+            "type": "integer",
+            "description": "Total frames analyzed",
+            "example": 108000
+          },
+          "processing_time_sec": {
+            "type": "number",
+            "description": "Time taken to process in seconds",
+            "example": 245.5
+          },
+          "fps": {
+            "type": "number",
+            "description": "Source video frame rate",
+            "example": 30.0
+          }
+        }
+      }
+    }
+  }
+}

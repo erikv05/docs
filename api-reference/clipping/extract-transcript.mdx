@@ -1,0 +1,83 @@
+---
+title: 'Extract Transcript'
+description: 'Extract audio-visual transcript with timestamps and speaker diarization'
+openapi: 'POST /api/v1/transcript'
+---
+
+## POST /api/v1/transcript
+
+Extract audio-visual transcript from video with word-level timestamps and optional speaker diarization. Returns both structured segments and full text.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video_url | URL | Yes | URL to the video to transcribe |
+| include_speakers | boolean | No | Include speaker diarization (default: false) |
+| include_timestamps | boolean | No | Include word-level timestamps (default: true) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| transcript | Array of transcript segments with timestamps |
+| full_text | Complete transcript as plain text |
+| duration_sec | Duration of the video in seconds |
+
+### Transcript Segment Object
+
+| Field | Description |
+|-------|-------------|
+| text | Transcript text for this segment |
+| start_time_sec | Start time of the segment in seconds |
+| end_time_sec | End time of the segment in seconds |
+| speaker | Speaker identifier (only when include_speakers=true) |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/transcript \
+  -H "Content-Type: application/json" \
+  -d '{
+    "video_url": "https://example.com/interview.mp4",
+    "include_speakers": true,
+    "include_timestamps": true
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "transcript": [
+    {
+      "text": "Welcome to the show. Today we have a special guest.",
+      "start_time_sec": 0.5,
+      "end_time_sec": 3.2,
+      "speaker": "Speaker 1"
+    },
+    {
+      "text": "Thanks for having me. I'm excited to be here.",
+      "start_time_sec": 3.5,
+      "end_time_sec": 5.8,
+      "speaker": "Speaker 2"
+    },
+    {
+      "text": "Let's dive right in. Tell us about your latest project.",
+      "start_time_sec": 6.1,
+      "end_time_sec": 8.9,
+      "speaker": "Speaker 1"
+    }
+  ],
+  "full_text": "Welcome to the show. Today we have a special guest. Thanks for having me. I'm excited to be here. Let's dive right in. Tell us about your latest project.",
+  "duration_sec": 3600
+}
+```
+
+### Notes
+
+- Transcription uses state-of-the-art speech recognition
+- Speaker diarization identifies unique speakers (Speaker 1, Speaker 2, etc.)
+- Timestamps are precise to the hundredth of a second
+- The `full_text` field provides the complete transcript without timestamps
+- Supports multiple languages (auto-detected)

@@ -1,0 +1,96 @@
+---
+title: 'Summarize Video'
+description: 'Generate AI-powered video summaries'
+openapi: 'POST /api/v1/summarize'
+---
+
+## POST /api/v1/summarize
+
+Generate an AI-powered summary of video content. Supports multiple output formats including bullet points, paragraphs, and timestamped chapters.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video_url | URL | Yes | URL to the video to summarize |
+| format | enum | No | Output format: `bullet_points`, `paragraph`, or `chapters` (default: `paragraph`) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| summary | Generated summary text |
+| chapters | Chapter breakdown (only when format=chapters) |
+| duration_sec | Duration of the video in seconds |
+
+### Chapter Object (when format=chapters)
+
+| Field | Description |
+|-------|-------------|
+| title | Chapter title |
+| start_time_sec | Start time of the chapter in seconds |
+| end_time_sec | End time of the chapter in seconds |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/summarize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "video_url": "https://example.com/game.mp4",
+    "format": "chapters"
+  }'
+```
+
+### Example Response (Chapters Format)
+
+```json
+{
+  "summary": "This video covers the championship game between the Eagles and Giants, featuring key plays and dramatic moments throughout all four quarters.",
+  "chapters": [
+    {
+      "title": "First Quarter - Opening Drives",
+      "start_time_sec": 0,
+      "end_time_sec": 900
+    },
+    {
+      "title": "Second Quarter - Eagles Take the Lead",
+      "start_time_sec": 900,
+      "end_time_sec": 1800
+    },
+    {
+      "title": "Halftime Analysis",
+      "start_time_sec": 1800,
+      "end_time_sec": 2100
+    },
+    {
+      "title": "Third Quarter - Giants Fight Back",
+      "start_time_sec": 2100,
+      "end_time_sec": 3000
+    },
+    {
+      "title": "Fourth Quarter - Dramatic Finish",
+      "start_time_sec": 3000,
+      "end_time_sec": 3600
+    }
+  ],
+  "duration_sec": 3600
+}
+```
+
+### Example Response (Bullet Points Format)
+
+```json
+{
+  "summary": "- Eagles won the championship game 28-24\n- Key touchdown by Smith in the 4th quarter\n- Giants mounted a comeback in the 3rd quarter\n- Over 50,000 fans in attendance",
+  "duration_sec": 3600
+}
+```
+
+### Notes
+
+- Processing time varies based on video length
+- The AI analyzes both audio and visual content
+- Chapters format is ideal for creating video navigation
+- Bullet points format is concise and scannable
+- Paragraph format provides a narrative summary

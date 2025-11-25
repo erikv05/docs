@@ -1,0 +1,87 @@
+---
+title: 'Generate Highlights'
+description: 'Create AI-powered highlight reels from long-form video content'
+openapi: 'POST /api/v1/highlights/generate'
+---
+
+## POST /api/v1/highlights/generate
+
+Generate a highlight reel from a full-length video using AI-powered analysis. Ideal for sports content like football games, automatically identifying touchdowns, big plays, turnovers, and exciting moments.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video | File | Yes | Video file (1-2 hours, e.g., full football game) |
+| metadata | File | No | Play metadata JSON for enhanced accuracy |
+| editorial_instructions | string | No | Custom instructions for highlight selection |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| status | Status of the operation ("success" or error) |
+| video_url | CDN URL to the generated highlight reel (valid for 24 hours) |
+| message | Human-readable status message |
+| original_duration_sec | Duration of the original video in seconds |
+| edited_duration_sec | Duration of the highlight reel in seconds |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/highlights/generate \
+  -H "Content-Type: multipart/form-data" \
+  -F "video=@game.mp4" \
+  -F "editorial_instructions=Focus on touchdowns and big plays"
+```
+
+### Example Response
+
+```json
+{
+  "status": "success",
+  "video_url": "https://cdn.usenarrative.ai/highlights/video_abc123.mp4",
+  "message": "Highlight reel generated successfully",
+  "original_duration_sec": 7200,
+  "edited_duration_sec": 900
+}
+```
+
+### Notes
+
+- Processing time varies based on video length (typically 5-10 minutes for a 2-hour video)
+- The AI identifies: touchdowns, interceptions, fumbles, big plays, and exciting commentary moments
+- Optional metadata file improves timestamp accuracy for sports broadcasts
+- Editorial instructions allow customization (e.g., "Include crowd reactions", "End with celebration")
+- Output video URL is valid for 24 hours
+
+### Enhanced Highlights with Vision Metadata
+
+For more accurate highlights, use the Vision endpoints to extract play-by-play metadata first:
+
+1. **[Detect ROIs](/api-reference/clipping/detect-rois)** - Identify scoreboard elements in your broadcast
+2. **[Extract Metadata](/api-reference/clipping/extract-metadata)** - Generate play-by-play events with precise timestamps
+3. **Generate Highlights** - Pass the metadata for enhanced accuracy
+
+When metadata is provided, the AI cross-references:
+- **Scoring plays** with exact timestamps from score changes
+- **Turnovers** detected from possession changes
+- **Red zone plays** from field position data
+- **Game-changing moments** from score differential analysis
+
+```bash
+# Full workflow with metadata
+curl -X POST https://api.usenarrative.ai/api/v1/highlights/generate \
+  -F "video=@football_game.mp4" \
+  -F "metadata=@play_metadata.json" \
+  -F "editorial_instructions=Focus on scoring plays and turnovers"
+```
+
+<CardGroup cols={2}>
+  <Card title="Detect ROIs" icon="crosshairs" href="/api-reference/clipping/detect-rois">
+    Identify HUD elements in broadcast video
+  </Card>
+  <Card title="Extract Metadata" icon="database" href="/api-reference/clipping/extract-metadata">
+    Generate play-by-play event data
+  </Card>
+</CardGroup>

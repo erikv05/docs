@@ -1,0 +1,53 @@
+---
+title: 'Prepare Video'
+description: 'Merge multiple episodes into a continuous video with smart transitions'
+openapi: 'POST /api/v1/hooks/prepare'
+---
+
+## POST /api/v1/hooks/prepare
+
+Prepare multiple episode files into a continuous video with smart transitions. The AI analyzes episode boundaries, removes freeze frames, and eliminates overlapping recap content for seamless playback.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| videos | File[] | Yes | Episode video files to merge (mp4, mov, avi, mkv) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| continuous_video_url | URL to the merged continuous video |
+| transcript_url | URL to the transcript JSON file with word-level timestamps |
+| total_duration_sec | Total duration of the continuous video in seconds |
+| episodes_processed | Number of episodes that were merged |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/hooks/prepare \
+  -H "Content-Type: multipart/form-data" \
+  -F "videos=@episode-1.mp4" \
+  -F "videos=@episode-2.mp4" \
+  -F "videos=@episode-3.mp4"
+```
+
+### Example Response
+
+```json
+{
+  "continuous_video_url": "https://cdn.usenarrative.ai/prepared/continuous_abc123.mp4",
+  "transcript_url": "https://cdn.usenarrative.ai/prepared/transcript_abc123.json",
+  "total_duration_sec": 5234.5,
+  "episodes_processed": 3
+}
+```
+
+### Notes
+
+- Supports common video formats: mp4, mov, avi, mkv
+- AI automatically detects and removes freeze frames between episodes
+- Overlapping recap content at episode starts is intelligently trimmed
+- The transcript includes word-level timestamps for precise hook generation
+- Use the returned URLs with the Generate Hook endpoint

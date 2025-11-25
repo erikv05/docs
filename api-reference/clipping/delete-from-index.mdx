@@ -1,0 +1,49 @@
+---
+title: 'Delete from Index'
+description: 'Remove an item from a search index'
+openapi: 'DELETE /api/v1/search/indexes/{index_id}/items/{item_id}'
+---
+
+## DELETE /api/v1/search/indexes/{index_id}/items/{item_id}
+
+Remove a specific item (video or clip) from a search index. This permanently deletes the item and all associated clips from the index.
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| index_id | string | Yes | The ID of the index |
+| item_id | string | Yes | The ID of the item to delete |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| index_id | ID of the index |
+| item_id | ID of the deleted item |
+| clips_removed | Number of clips removed from the index |
+| message | Confirmation message |
+
+### Example Request
+
+```bash
+curl -X DELETE https://api.usenarrative.ai/api/v1/search/indexes/idx_abc123xyz/items/item_def456
+```
+
+### Example Response
+
+```json
+{
+  "index_id": "idx_abc123xyz",
+  "item_id": "item_def456",
+  "clips_removed": 23,
+  "message": "Item successfully deleted from index"
+}
+```
+
+### Notes
+
+- Deletion is permanent and cannot be undone
+- All clips derived from the deleted item are also removed
+- The item_id is returned in search results and upload responses
+- Deleting an item does not affect other items in the index

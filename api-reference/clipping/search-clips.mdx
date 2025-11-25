@@ -1,0 +1,75 @@
+---
+title: 'Search Clips'
+description: 'Search video clips using natural language queries'
+openapi: 'POST /api/v1/search/query'
+---
+
+## POST /api/v1/search/query
+
+Search for video clips using natural language queries. Returns relevant clips with timestamps, relevance scores, and transcript snippets.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| index_id | string | Yes | ID of the index to search |
+| query | string | Yes | Natural language search query |
+| limit | integer | No | Maximum number of results (default: 10) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| results | Array of matching clips |
+
+### Result Object
+
+| Field | Description |
+|-------|-------------|
+| clip_url | URL to the video clip |
+| start_time_sec | Start time of the clip in the source video |
+| end_time_sec | End time of the clip in the source video |
+| relevance_score | Relevance score from 0 to 1 |
+| transcript_snippet | Transcript excerpt from the clip |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/search/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "index_id": "idx_abc123xyz",
+    "query": "touchdown celebrations",
+    "limit": 5
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "results": [
+    {
+      "clip_url": "https://cdn.usenarrative.ai/clips/clip_001.mp4",
+      "start_time_sec": 145.5,
+      "end_time_sec": 158.2,
+      "relevance_score": 0.95,
+      "transcript_snippet": "And he's in for the touchdown! What a play!"
+    },
+    {
+      "clip_url": "https://cdn.usenarrative.ai/clips/clip_002.mp4",
+      "start_time_sec": 892.1,
+      "end_time_sec": 905.8,
+      "relevance_score": 0.87,
+      "transcript_snippet": "The team celebrates in the end zone..."
+    }
+  ]
+}
+```
+
+### Notes
+
+- Queries can be natural language (e.g., "moments where the crowd goes wild")
+- Results are ranked by relevance score
+- Each clip includes a transcript snippet for context
+- Clip URLs are valid for 24 hours

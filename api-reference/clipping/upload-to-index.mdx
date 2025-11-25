@@ -1,0 +1,57 @@
+---
+title: 'Upload to Index'
+description: 'Upload video files to a search index'
+openapi: 'POST /api/v1/search/indexes/{index_id}/upload'
+---
+
+## POST /api/v1/search/indexes/{index_id}/upload
+
+Upload video files to an existing search index. Files are processed, transcribed, and indexed for semantic search. Each video is automatically segmented into searchable clips.
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| index_id | string | Yes | The ID of the index to upload to |
+
+### Body Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| files | File[] | Yes | Video files to upload and index |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| index_id | ID of the index that was updated |
+| files_processed | Number of files that were processed |
+| clips_indexed | Total number of searchable clips created |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/search/indexes/idx_abc123xyz/upload \
+  -H "Content-Type: multipart/form-data" \
+  -F "files=@highlight1.mp4" \
+  -F "files=@highlight2.mp4" \
+  -F "files=@highlight3.mp4"
+```
+
+### Example Response
+
+```json
+{
+  "index_id": "idx_abc123xyz",
+  "files_processed": 3,
+  "clips_indexed": 127
+}
+```
+
+### Notes
+
+- Processing time depends on total video duration
+- Videos are transcribed and semantically indexed
+- Each video is automatically segmented into clips based on content
+- Clips are searchable immediately after processing completes
+- Supported formats: mp4, mov, avi, mkv, webm

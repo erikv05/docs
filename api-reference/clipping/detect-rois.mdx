@@ -1,0 +1,92 @@
+---
+title: 'Detect ROIs'
+description: 'AI-powered detection of regions of interest in video frames'
+openapi: 'POST /api/v1/vision/detect-rois'
+---
+
+## POST /api/v1/vision/detect-rois
+
+Use AI vision to detect regions of interest (ROIs) in a video frame based on text descriptions. Ideal for identifying HUD elements, overlays, scoreboards, or any specific visual components in broadcast video.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video | File | No* | Video file to analyze (a frame will be extracted) |
+| frame_url | URL | No* | URL to a specific frame/image to analyze |
+| elements | array | Yes | List of elements to detect with descriptions |
+| frame_number | integer | No | Frame to extract from video (default: 300) |
+
+*Either `video` or `frame_url` is required.
+
+### Element Object
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| name | string | Yes | Identifier for this ROI element |
+| description | string | Yes | Natural language description of what to detect |
+| required | boolean | No | Whether this element must be found (default: true) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| roi_config | Detected ROI coordinates keyed by element name |
+| calibration_frame_url | URL to the frame used for calibration |
+| visualization_url | URL to annotated frame showing detected ROIs |
+
+### Bounding Box Format
+
+Each ROI returns coordinates as:
+- `y_min` - Top edge (pixels from top)
+- `x_min` - Left edge (pixels from left)
+- `y_max` - Bottom edge
+- `x_max` - Right edge
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/vision/detect-rois \
+  -H "Content-Type: multipart/form-data" \
+  -F "video=@football_game.mp4" \
+  -F 'elements=[
+    {"name": "play_clock", "description": "The small box showing the play clock (typically 25-40 seconds)"},
+    {"name": "game_clock", "description": "The quarter time remaining (e.g., 12:35)"},
+    {"name": "home_score", "description": "The home team score number"},
+    {"name": "away_score", "description": "The away team score number"},
+    {"name": "down_distance", "description": "The down and distance indicator (e.g., 2nd & 7)"},
+    {"name": "quarter", "description": "The quarter indicator (1st, 2nd, 3rd, 4th)"}
+  ]'
+```
+
+### Example Response
+
+```json
+{
+  "roi_config": {
+    "play_clock": {"y_min": 45, "x_min": 580, "y_max": 75, "x_max": 640},
+    "game_clock": {"y_min": 45, "x_min": 480, "y_max": 75, "x_max": 560},
+    "home_score": {"y_min": 45, "x_min": 200, "y_max": 75, "x_max": 250},
+    "away_score": {"y_min": 45, "x_min": 300, "y_max": 75, "x_max": 350},
+    "down_distance": {"y_min": 80, "x_min": 240, "y_max": 110, "x_max": 400},
+    "quarter": {"y_min": 45, "x_min": 420, "y_max": 75, "x_max": 470}
+  },
+  "calibration_frame_url": "https://cdn.usenarrative.ai/calibration/frame_abc123.jpg",
+  "visualization_url": "https://cdn.usenarrative.ai/calibration/viz_abc123.jpg"
+}
+```
+
+### Use Cases
+
+- **Sports Broadcasts** - Detect scoreboard, play clock, down & distance, team logos
+- **News Programs** - Identify ticker, lower thirds, station bugs
+- **Live Streams** - Find chat overlays, donation alerts, subscriber counts
+- **Gaming Content** - Detect health bars, minimaps, score displays
+
+### Notes
+
+- The AI uses vision models to identify elements based on your descriptions
+- Be specific in your descriptions for better accuracy
+- The visualization URL shows color-coded boxes around each detected element
+- ROI config can be saved and reused for videos with the same broadcast format
+- Use with the Extract Metadata endpoint to monitor these regions over time

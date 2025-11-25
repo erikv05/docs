@@ -1,0 +1,82 @@
+---
+title: 'Generate Hook'
+description: 'Create engaging social media hooks with cliffhangers'
+openapi: 'POST /api/v1/hooks/generate'
+---
+
+## POST /api/v1/hooks/generate
+
+Generate an engaging hook from prepared video content. Supports multiple hook types optimized for social media engagement, each with automatic cliffhanger detection.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| continuous_video_url | URL | Yes | URL to the prepared continuous video |
+| transcript_url | URL | Yes | URL to the transcript JSON file |
+| hook_type | enum | Yes | Type of hook: `fine_cut`, `compilation`, or `narration` |
+
+### Hook Types
+
+| Type | Description |
+|------|-------------|
+| `fine_cut` | Single complete scene (20-40s) with high drama, no edits |
+| `compilation` | Flashback structure: Setup → Flashback → Continuation |
+| `narration` | TikTok-style edit with AI voiceover (3-4 segments) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| video_url | URL to the generated hook video |
+| hook_duration_sec | Duration of the hook in seconds |
+| cliffhanger_timestamp_sec | Timestamp where the video cuts to cliffhanger |
+| hook_type | Type of hook that was generated |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/hooks/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "continuous_video_url": "https://cdn.usenarrative.ai/prepared/continuous_abc123.mp4",
+    "transcript_url": "https://cdn.usenarrative.ai/prepared/transcript_abc123.json",
+    "hook_type": "fine_cut"
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "video_url": "https://cdn.usenarrative.ai/hooks/hook_abc123.mp4",
+  "hook_duration_sec": 35.5,
+  "cliffhanger_timestamp_sec": 756.8,
+  "hook_type": "fine_cut"
+}
+```
+
+### Hook Type Details
+
+#### Fine Cut
+- Finds one complete, engaging scene from the video
+- 20-40 seconds of continuous playback with no edits
+- Identifies scenes with dramatic arc (beginning, middle, end)
+
+#### Compilation
+- Creates a three-part narrative structure
+- **Setup** (8-10s): Characters discussing a past event
+- **Flashback** (10-15s): The actual scene from earlier
+- **Continuation** (8-10s): Return to present with reaction
+
+#### Narration
+- TikTok-style edit with AI-generated voiceover
+- 3-4 video segments from any timestamp, in any order
+- Each segment has 12-18 word narration overlay
+- Builds suspense and intrigue
+
+### Notes
+
+- Requires output from the Prepare Video endpoint
+- Cliffhanger is detected 12-18 minutes after the hook ends
+- Hook is designed to maximize viewer engagement and watch-through
