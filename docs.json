@@ -69,6 +69,7 @@
             "group": "Search",
             "pages": [
               "api-reference/clipping/create-index",
+              "api-reference/clipping/delete-index",
               "api-reference/clipping/upload-to-index",
               "api-reference/clipping/delete-from-index",
               "api-reference/clipping/search-clips"

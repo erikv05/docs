@@ -212,6 +212,57 @@
         }
       }
     },
+    "/api/v1/search/indexes/{index_id}": {
+      "delete": {
+        "operationId": "deleteIndex",
+        "summary": "Delete Index",
+        "description": "Permanently delete a search index and all its contents.",
+        "tags": ["Search"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Index deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteIndexResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/search/indexes/{index_id}/upload": {
       "post": {
         "operationId": "uploadToIndex",
@@ -825,6 +876,37 @@
           }
         },
         "required": ["index_id", "files_processed", "clips_indexed"]
+      },
+      "DeleteIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the deleted index",
+            "example": "idx_abc123xyz"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the deleted index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "items_deleted": {
+            "type": "integer",
+            "description": "Number of items that were in the index",
+            "example": 12
+          },
+          "clips_deleted": {
+            "type": "integer",
+            "description": "Total number of clips that were deleted",
+            "example": 347
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation message",
+            "example": "Index successfully deleted"
+          }
+        },
+        "required": ["index_id", "name", "items_deleted", "clips_deleted", "message"]
       },
       "DeleteFromIndexResponse": {
         "type": "object",

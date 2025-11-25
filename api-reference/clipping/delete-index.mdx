@@ -1,0 +1,50 @@
+---
+title: 'Delete Index'
+description: 'Permanently delete a search index and all its contents'
+openapi: 'DELETE /api/v1/search/indexes/{index_id}'
+---
+
+## DELETE /api/v1/search/indexes/{index_id}
+
+Permanently delete a search index and all its contents. This removes the index, all uploaded items, and all indexed clips.
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| index_id | string | Yes | The ID of the index to delete |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| index_id | ID of the deleted index |
+| name | Name of the deleted index |
+| items_deleted | Number of items that were in the index |
+| clips_deleted | Total number of clips that were deleted |
+| message | Confirmation message |
+
+### Example Request
+
+```bash
+curl -X DELETE https://api.usenarrative.ai/api/v1/search/indexes/idx_abc123xyz
+```
+
+### Example Response
+
+```json
+{
+  "index_id": "idx_abc123xyz",
+  "name": "Sports Highlights Q4 2024",
+  "items_deleted": 12,
+  "clips_deleted": 347,
+  "message": "Index successfully deleted"
+}
+```
+
+### Notes
+
+- This action is permanent and cannot be undone
+- All items and clips in the index will be deleted
+- Any URLs pointing to clips in this index will become invalid
+- To remove a single item instead, use [Delete from Index](/api-reference/clipping/delete-from-index)
