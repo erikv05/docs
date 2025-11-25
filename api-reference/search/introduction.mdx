@@ -1,0 +1,56 @@
+---
+title: 'Introduction'
+description: 'Index and search video clips with natural language'
+---
+
+## Search API
+
+The Search API allows you to index video content and search through it using natural language queries. Build powerful video search experiences by uploading videos, automatically segmenting them into clips, and searching with semantic understanding.
+
+### Key Features
+
+- **Index Management** - Create and manage search indexes for organizing video content
+- **Automatic Segmentation** - Videos are automatically split into searchable clips
+- **Semantic Search** - Find clips using natural language queries
+- **Transcript Snippets** - Search results include relevant transcript excerpts
+
+### Base URL
+
+```
+https://api.usenarrative.ai
+```
+
+### Workflow
+
+```
+┌──────────────┐     ┌─────────────────┐     ┌──────────────┐
+│ Create Index │ ──▶ │ Upload Videos   │ ──▶ │ Search Clips │
+└──────────────┘     └─────────────────┘     └──────────────┘
+```
+
+1. **Create Index** - Set up a named index to organize your content
+2. **Upload Videos** - Add video files to be processed and indexed
+3. **Search** - Query your index with natural language
+
+### Quick Start
+
+```bash
+# 1. Create an index
+curl -X POST https://api.usenarrative.ai/api/v1/search/indexes \
+  -H "Content-Type: application/json" \
+  -d '{"name": "My Video Library"}'
+
+# 2. Upload videos
+curl -X POST https://api.usenarrative.ai/api/v1/search/indexes/idx_abc123/upload \
+  -F "files=@video1.mp4" \
+  -F "files=@video2.mp4"
+
+# 3. Search
+curl -X POST https://api.usenarrative.ai/api/v1/search/query \
+  -H "Content-Type: application/json" \
+  -d '{"index_id": "idx_abc123", "query": "exciting moments"}'
+```
+
+<Card title="OpenAPI Specification" icon="file-code" href="/api-reference/search-openapi.json">
+  View the full OpenAPI specification
+</Card>

@@ -10,7 +10,7 @@
   },
   "customCss": "/custom.css",
   "favicon": "/favicon.svg",
-  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json"],
+  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json", "/api-reference/search-openapi.json"],
   "navigation": {
     "tabs": [
       {
@@ -66,16 +66,6 @@
             ]
           },
           {
-            "group": "Search",
-            "pages": [
-              "api-reference/clipping/create-index",
-              "api-reference/clipping/delete-index",
-              "api-reference/clipping/upload-to-index",
-              "api-reference/clipping/delete-from-index",
-              "api-reference/clipping/search-clips"
-            ]
-          },
-          {
             "group": "Analysis",
             "pages": [
               "api-reference/clipping/summarize-video",
@@ -87,6 +77,37 @@
             "pages": [
               "api-reference/clipping/detect-rois",
               "api-reference/clipping/extract-metadata"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Search API",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/search/introduction"
+            ]
+          },
+          {
+            "group": "Indexes",
+            "pages": [
+              "api-reference/search/create-index",
+              "api-reference/search/delete-index"
+            ]
+          },
+          {
+            "group": "Items",
+            "pages": [
+              "api-reference/search/upload-to-index",
+              "api-reference/search/delete-from-index"
+            ]
+          },
+          {
+            "group": "Query",
+            "pages": [
+              "api-reference/search/search-clips"
             ]
           }
         ]

@@ -1,0 +1,519 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Search API",
+    "description": "Video clip indexing and natural language search API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.usenarrative.ai",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api/v1/search/indexes": {
+      "post": {
+        "operationId": "createIndex",
+        "summary": "Create Index",
+        "description": "Create a new search index for organizing and searching video clips.",
+        "tags": ["Indexes"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIndexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Index created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateIndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes/{index_id}": {
+      "delete": {
+        "operationId": "deleteIndex",
+        "summary": "Delete Index",
+        "description": "Permanently delete a search index and all its contents.",
+        "tags": ["Indexes"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Index deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteIndexResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes/{index_id}/upload": {
+      "post": {
+        "operationId": "uploadToIndex",
+        "summary": "Upload to Index",
+        "description": "Upload video files to an existing search index. Files are processed and indexed for semantic search.",
+        "tags": ["Items"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index to upload to",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadToIndexRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Files uploaded and indexed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadToIndexResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/indexes/{index_id}/items/{item_id}": {
+      "delete": {
+        "operationId": "deleteFromIndex",
+        "summary": "Delete from Index",
+        "description": "Remove a specific item (video or clip) from a search index.",
+        "tags": ["Items"],
+        "parameters": [
+          {
+            "name": "index_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the index",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the item to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFromIndexResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index or item not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/search/query": {
+      "post": {
+        "operationId": "searchClips",
+        "summary": "Search Clips",
+        "description": "Search for video clips using natural language queries. Returns relevant clips with timestamps and relevance scores.",
+        "tags": ["Query"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchClipsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Search completed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchClipsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Index not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateIndexRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name for the search index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional description of the index",
+            "example": "Collection of NFL game highlights from Q4 2024"
+          }
+        },
+        "required": ["name"]
+      },
+      "CreateIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "Unique identifier for the index",
+            "example": "idx_abc123xyz"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO timestamp of when the index was created",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": ["index_id", "name", "created_at"]
+      },
+      "DeleteIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the deleted index",
+            "example": "idx_abc123xyz"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the deleted index",
+            "example": "Sports Highlights Q4 2024"
+          },
+          "items_deleted": {
+            "type": "integer",
+            "description": "Number of items that were in the index",
+            "example": 12
+          },
+          "clips_deleted": {
+            "type": "integer",
+            "description": "Total number of clips that were deleted",
+            "example": 347
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation message",
+            "example": "Index successfully deleted"
+          }
+        },
+        "required": ["index_id", "name", "items_deleted", "clips_deleted", "message"]
+      },
+      "UploadToIndexRequest": {
+        "type": "object",
+        "properties": {
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "description": "Video files to upload and index"
+          }
+        },
+        "required": ["files"]
+      },
+      "UploadToIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index that was updated",
+            "example": "idx_abc123xyz"
+          },
+          "files_processed": {
+            "type": "integer",
+            "description": "Number of files that were processed",
+            "example": 5
+          },
+          "clips_indexed": {
+            "type": "integer",
+            "description": "Total number of searchable clips created",
+            "example": 127
+          }
+        },
+        "required": ["index_id", "files_processed", "clips_indexed"]
+      },
+      "DeleteFromIndexResponse": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index",
+            "example": "idx_abc123xyz"
+          },
+          "item_id": {
+            "type": "string",
+            "description": "ID of the deleted item",
+            "example": "item_def456"
+          },
+          "clips_removed": {
+            "type": "integer",
+            "description": "Number of clips removed from the index",
+            "example": 23
+          },
+          "message": {
+            "type": "string",
+            "description": "Confirmation message",
+            "example": "Item successfully deleted from index"
+          }
+        },
+        "required": ["index_id", "item_id", "clips_removed", "message"]
+      },
+      "SearchClipsRequest": {
+        "type": "object",
+        "properties": {
+          "index_id": {
+            "type": "string",
+            "description": "ID of the index to search",
+            "example": "idx_abc123xyz"
+          },
+          "query": {
+            "type": "string",
+            "description": "Natural language search query",
+            "example": "touchdown celebrations"
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of results to return",
+            "default": 10,
+            "example": 10
+          }
+        },
+        "required": ["index_id", "query"]
+      },
+      "SearchClipsResponse": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SearchResult"
+            },
+            "description": "Array of matching clips"
+          }
+        },
+        "required": ["results"]
+      },
+      "SearchResult": {
+        "type": "object",
+        "properties": {
+          "clip_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the video clip",
+            "example": "https://cdn.usenarrative.ai/clips/clip_abc123.mp4"
+          },
+          "start_time_sec": {
+            "type": "number",
+            "description": "Start time of the clip in the source video",
+            "example": 145.5
+          },
+          "end_time_sec": {
+            "type": "number",
+            "description": "End time of the clip in the source video",
+            "example": 158.2
+          },
+          "relevance_score": {
+            "type": "number",
+            "description": "Relevance score from 0 to 1",
+            "example": 0.92
+          },
+          "transcript_snippet": {
+            "type": "string",
+            "description": "Transcript excerpt from the clip",
+            "example": "And he's in for the touchdown! What a play!"
+          }
+        },
+        "required": ["clip_url", "start_time_sec", "end_time_sec", "relevance_score"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Invalid request parameters"
+          }
+        }
+      }
+    }
+  }
+}
