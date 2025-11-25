@@ -156,9 +156,9 @@ curl -X POST https://api.usenarrative.ai/api/v1/vision/extract-metadata \
 - The ROI config can be reused across videos with the same broadcast format
 - Events are detected based on state changes in the monitored regions
 
-### Using Metadata with Generate Highlights
+### Using Metadata with Generate Football Highlights
 
-The metadata JSON from this endpoint can be passed directly to the [Generate Highlights](/api-reference/clipping/generate-highlights) endpoint for enhanced accuracy. When metadata is provided, highlight generation uses:
+The metadata JSON from this endpoint can be passed directly to the [Generate Football Highlights](/api-reference/clipping/generate-highlights) endpoint for enhanced accuracy. When metadata is provided, highlight generation uses:
 
 - **Precise timestamps** for scoring plays, turnovers, and big moments
 - **Score context** to identify game-changing plays
@@ -177,12 +177,12 @@ curl -X POST https://api.usenarrative.ai/api/v1/vision/extract-metadata \
   -F 'output_schema={...}' \
   -o metadata.json
 
-# Step 3: Generate highlights with metadata
+# Step 3: Generate Football Highlights with metadata
 curl -X POST https://api.usenarrative.ai/api/v1/highlights/generate \
   -F "video=@game.mp4" \
   -F "metadata=@metadata.json"
 ```
 
-<Card title="Generate Highlights" icon="wand-magic-sparkles" href="/api-reference/clipping/generate-highlights">
+<Card title="Generate Football Highlights" icon="wand-magic-sparkles" href="/api-reference/clipping/generate-highlights">
   Use extracted metadata for more accurate highlight generation
 </Card>

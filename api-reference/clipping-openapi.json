@@ -15,7 +15,7 @@
     "/api/v1/highlights/generate": {
       "post": {
         "operationId": "generateHighlights",
-        "summary": "Generate Highlights",
+        "summary": "Generate Football Highlights",
         "description": "Generate a highlight reel from a full-length video using AI-powered analysis. Ideal for sports content like football games.",
         "tags": ["Highlights"],
         "requestBody": {
