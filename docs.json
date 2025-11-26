@@ -9,7 +9,7 @@
 
   },
   "customCss": "/custom.css",
-  "favicon": "/favicon.ico",
+  "favicon": "/favicon.svg",
   "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json", "/api-reference/search-openapi.json"],
   "navigation": {
     "tabs": [
