@@ -9,17 +9,22 @@
 
   },
   "customCss": "/custom.css",
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.ico",
   "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json", "/api-reference/search-openapi.json"],
   "navigation": {
     "tabs": [
       {
-        "tab": "API reference",
+        "tab": "Thumbnails API",
         "groups": [
           {
-            "group": "Narrative API",
+            "group": "Overview",
             "pages": [
-              "api-reference/narrative/introduction",
+              "api-reference/narrative/introduction"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
               "api-reference/narrative/dynamic-thumbnails",
               "api-reference/narrative/generate-thumbnails"
             ]
@@ -27,7 +32,7 @@
         ]
       },
       {
-        "tab": "Instinct API",
+        "tab": "Clipping API",
         "groups": [
           {
             "group": "Overview",
@@ -44,7 +49,7 @@
         ]
       },
       {
-        "tab": "Clipping API",
+        "tab": "Highlights API",
         "groups": [
           {
             "group": "Overview",
