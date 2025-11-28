@@ -12,56 +12,6 @@
     }
   ],
   "paths": {
-    "/api/v1/sports/detect-rois": {
-      "post": {
-        "operationId": "detectRois",
-        "summary": "Detect ROIs",
-        "description": "Use AI vision to detect regions of interest (ROIs) in a video frame based on text descriptions. Ideal for identifying HUD elements, overlays, or specific visual components in broadcast video.",
-        "tags": ["Calibration"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/DetectRoisRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "ROIs detected successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DetectRoisResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request parameters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/sports/extract-metadata": {
       "post": {
         "operationId": "createExtractMetadataTask",
