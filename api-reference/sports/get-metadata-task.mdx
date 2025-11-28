@@ -1,0 +1,124 @@
+---
+title: 'Get Metadata Task'
+description: 'Poll metadata extraction task status and retrieve results'
+openapi: 'GET /api/v1/sports/extract-metadata/{task_id}'
+---
+
+## GET /api/v1/sports/extract-metadata/{task_id}
+
+Poll the status of a metadata extraction task and retrieve results when complete.
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| task_id | string | Yes | The task ID returned from the create request |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| task_id | Task identifier |
+| status | Current status: `pending`, `processing`, `completed`, `failed` |
+| progress | Progress percentage (0-100) |
+| created_at | When the task was created |
+| completed_at | When the task completed (if finished) |
+| result | Extracted metadata (when status=completed) |
+| error | Error details (when status=failed) |
+
+### Example Request
+
+```bash
+curl https://api.usenarrative.ai/api/v1/sports/extract-metadata/task_abc123xyz
+```
+
+### Example Response (Processing)
+
+```json
+{
+  "task_id": "task_abc123xyz",
+  "status": "processing",
+  "progress": 45,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": null,
+  "result": null,
+  "error": null
+}
+```
+
+### Example Response (Completed)
+
+```json
+{
+  "task_id": "task_abc123xyz",
+  "status": "completed",
+  "progress": 100,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:35:00Z",
+  "result": {
+    "events": [
+      {
+        "event_type": "play_start",
+        "timestamp_sec": 125.5,
+        "game_clock": "12:35",
+        "home_score": 7,
+        "away_score": 3
+      },
+      {
+        "event_type": "score_change",
+        "timestamp_sec": 892.4,
+        "game_clock": "8:15",
+        "home_score": 14,
+        "away_score": 3
+      }
+    ],
+    "metadata_url": "https://cdn.usenarrative.ai/metadata/events_abc123.json",
+    "video_duration_sec": 7200,
+    "events_detected": 142,
+    "processing_stats": {
+      "frames_processed": 108000,
+      "processing_time_sec": 245.5,
+      "fps": 30.0
+    }
+  },
+  "error": null
+}
+```
+
+### Example Response (Failed)
+
+```json
+{
+  "task_id": "task_abc123xyz",
+  "status": "failed",
+  "progress": 23,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:31:00Z",
+  "result": null,
+  "error": {
+    "code": "PROCESSING_FAILED",
+    "message": "Failed to process video: invalid format"
+  }
+}
+```
+
+### Polling Strategy
+
+Recommended polling intervals:
+- First minute: every 5 seconds
+- After 1 minute: every 15 seconds
+- After 5 minutes: every 30 seconds
+
+### Using Results with Highlights
+
+The extracted metadata can be passed to the Generate Highlights endpoint for enhanced accuracy:
+
+```bash
+# Download metadata
+curl -o metadata.json "https://cdn.usenarrative.ai/metadata/events_abc123.json"
+
+# Use with highlights generation
+curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
+  -F "video=@game.mp4" \
+  -F "metadata=@metadata.json"
+```

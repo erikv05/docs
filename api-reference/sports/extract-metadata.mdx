@@ -1,0 +1,77 @@
+---
+title: 'Extract Metadata'
+description: 'Start async task to extract structured metadata from video'
+openapi: 'POST /api/v1/sports/extract-metadata'
+---
+
+## POST /api/v1/sports/extract-metadata
+
+Start an async task to extract structured metadata from video using ROI configuration. Returns a task ID for polling.
+
+This is an **asynchronous** endpoint - use the task ID to poll for results.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video | File | No* | Video file to process |
+| video_url | URL | No* | URL to video file |
+| roi_config | object | Yes | ROI configuration from detect-rois endpoint |
+| output_schema | object | Yes | JSON Schema defining the event structure to extract |
+| skip_frames | integer | No | Process every Nth frame (default: 2) |
+
+*Either `video` or `video_url` is required.
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| task_id | Unique identifier for polling |
+| status | Initial status (`pending`) |
+| created_at | When the task was created |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/sports/extract-metadata \
+  -H "Content-Type: multipart/form-data" \
+  -F "video=@football_game.mp4" \
+  -F 'roi_config={
+    "play_clock": {"y_min": 45, "x_min": 580, "y_max": 75, "x_max": 640},
+    "game_clock": {"y_min": 45, "x_min": 480, "y_max": 75, "x_max": 560},
+    "home_score": {"y_min": 45, "x_min": 200, "y_max": 75, "x_max": 250},
+    "away_score": {"y_min": 45, "x_min": 300, "y_max": 75, "x_max": 350}
+  }' \
+  -F 'output_schema={
+    "type": "object",
+    "properties": {
+      "event_type": {"type": "string", "enum": ["play_start", "play_end", "score_change"]},
+      "timestamp_sec": {"type": "number"},
+      "game_clock": {"type": "string"},
+      "home_score": {"type": "integer"},
+      "away_score": {"type": "integer"}
+    }
+  }'
+```
+
+### Example Response
+
+```json
+{
+  "task_id": "task_abc123xyz",
+  "status": "pending",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+### Next Step
+
+Poll the task status using `GET /api/v1/sports/extract-metadata/{task_id}`:
+
+```bash
+curl https://api.usenarrative.ai/api/v1/sports/extract-metadata/task_abc123xyz
+```
+
+<Card title="Get Metadata Task" icon="clock" href="/api-reference/sports/get-metadata-task">
+  Poll task status and retrieve results
+</Card>

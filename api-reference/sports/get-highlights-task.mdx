@@ -1,0 +1,105 @@
+---
+title: 'Get Highlights Task'
+description: 'Poll highlight generation task status and retrieve results'
+openapi: 'GET /api/v1/sports/highlights/{task_id}'
+---
+
+## GET /api/v1/sports/highlights/{task_id}
+
+Poll the status of a highlight generation task and retrieve results when complete.
+
+### Path Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| task_id | string | Yes | The task ID returned from the create request |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| task_id | Task identifier |
+| status | Current status: `pending`, `processing`, `completed`, `failed` |
+| progress | Progress percentage (0-100) |
+| created_at | When the task was created |
+| completed_at | When the task completed (if finished) |
+| result | Highlight video details (when status=completed) |
+| error | Error details (when status=failed) |
+
+### Example Request
+
+```bash
+curl https://api.usenarrative.ai/api/v1/sports/highlights/task_def456xyz
+```
+
+### Example Response (Processing)
+
+```json
+{
+  "task_id": "task_def456xyz",
+  "status": "processing",
+  "progress": 67,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": null,
+  "result": null,
+  "error": null
+}
+```
+
+### Example Response (Completed)
+
+```json
+{
+  "task_id": "task_def456xyz",
+  "status": "completed",
+  "progress": 100,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:40:00Z",
+  "result": {
+    "video_url": "https://cdn.usenarrative.ai/highlights/video_abc123.mp4",
+    "original_duration_sec": 7200,
+    "edited_duration_sec": 900
+  },
+  "error": null
+}
+```
+
+### Example Response (Failed)
+
+```json
+{
+  "task_id": "task_def456xyz",
+  "status": "failed",
+  "progress": 12,
+  "created_at": "2024-01-15T10:30:00Z",
+  "completed_at": "2024-01-15T10:31:00Z",
+  "result": null,
+  "error": {
+    "code": "PROCESSING_FAILED",
+    "message": "Failed to process video: unsupported codec"
+  }
+}
+```
+
+### Result Fields
+
+| Field | Description |
+|-------|-------------|
+| video_url | CDN URL to highlight reel (valid for 24 hours) |
+| original_duration_sec | Duration of input video in seconds |
+| edited_duration_sec | Duration of highlight reel in seconds |
+
+### Polling Strategy
+
+Highlight generation typically takes 5-10 minutes for a 2-hour video.
+
+Recommended polling intervals:
+- First 2 minutes: every 10 seconds
+- After 2 minutes: every 30 seconds
+- After 10 minutes: every 60 seconds
+
+### Notes
+
+- Processing time varies based on video length
+- Output video URL is valid for 24 hours
+- Typical reduction: ~85% (2 hours → 15 minutes of highlights)

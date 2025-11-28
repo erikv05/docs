@@ -1,17 +1,17 @@
 ---
 title: 'Introduction'
-description: 'AI-powered video clipping, search, and analysis APIs'
+description: 'AI-powered social media hook generation and video analysis'
 ---
 
-## Clipping API
+## Hooks API
 
-The Clipping API provides a comprehensive suite of tools for AI-powered video processing, from generating highlight reels to searching video content with natural language.
+The Hooks API provides tools for creating engaging social media content from episodic video. Transform TV series episodes into viral hooks with automatic cliffhanger detection.
 
 ### Key Features
 
-- **Highlight Generation** - Automatically create highlight reels from long-form video content
-- **Hook Creation** - Generate engaging social media hooks with cliffhangers
-- **Video Search** - Index and search video content using natural language queries
+- **Episode Preparation** - Merge multiple episodes into continuous video with smart transitions
+- **Hook Generation** - Create engaging 30-60 second hooks with AI-detected cliffhangers
+- **Multiple Hook Types** - Fine cut, compilation, or narration-style hooks
 - **Summarization** - Generate AI-powered summaries in multiple formats
 - **Transcription** - Extract audio-visual transcripts with timestamps and speaker diarization
 
@@ -25,32 +25,34 @@ https://api.usenarrative.ai
 
 | Group | Description |
 |-------|-------------|
-| **Highlights** | Generate highlight reels from long-form content (sports, events) |
-| **Hooks** | Create engaging hooks from episodic content (TV series, podcasts) |
+| **Hooks** | Prepare episodes and generate social media hooks |
 | **Analysis** | Summarize videos and extract transcripts |
-| **Vision** | Detect ROIs and extract structured metadata from video frames |
 
 ### Quick Start
 
-1. **Generate Football Highlights** - Upload a video and get an AI-curated highlight reel
-2. **Create Hooks** - Prepare episodes and generate social media hooks
-3. **Analyze Videos** - Get summaries or full transcripts
-4. **Vision Pipeline** - Detect on-screen elements and extract structured metadata
+```bash
+# 1. Prepare episodes into continuous video
+curl -X POST https://api.usenarrative.ai/api/v1/hooks/prepare \
+  -F "videos=@episode-1.mp4" \
+  -F "videos=@episode-2.mp4"
 
-### Enhanced Highlights Workflow
-
-For maximum accuracy with broadcast video (sports, news, live events), use the Vision pipeline:
-
+# 2. Generate a hook
+curl -X POST https://api.usenarrative.ai/api/v1/hooks/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "continuous_video_url": "...",
+    "transcript_url": "...",
+    "hook_type": "fine_cut"
+  }'
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌────────────────────┐
-│  Detect ROIs    │ ──▶ │ Extract Metadata │ ──▶ │ Generate Football Highlights│
-│  (calibration)  │     │  (play-by-play)  │     │   (with metadata)  │
-└─────────────────┘     └──────────────────┘     └────────────────────┘
-```
 
-1. **Detect ROIs** - AI identifies scoreboard, clock, and HUD elements
-2. **Extract Metadata** - Monitor video and generate timestamped events
-3. **Generate Football Highlights** - Use metadata for precise, context-aware clips
+### Hook Types
+
+| Type | Description |
+|------|-------------|
+| `fine_cut` | Single 20-40s complete scene, no edits |
+| `compilation` | Setup → Flashback → Continuation structure |
+| `narration` | TikTok-style with AI voiceover (3-4 segments) |
 
 <Card title="OpenAPI Specification" icon="file-code" href="/api-reference/clipping-openapi.json">
   View the full OpenAPI specification

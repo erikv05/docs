@@ -1,0 +1,617 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sports API",
+    "description": "Sports video analysis and highlight generation API with async task processing",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.usenarrative.ai",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/api/v1/sports/detect-rois": {
+      "post": {
+        "operationId": "detectRois",
+        "summary": "Detect ROIs",
+        "description": "Use AI vision to detect regions of interest (ROIs) in a video frame based on text descriptions. Ideal for identifying HUD elements, overlays, or specific visual components in broadcast video.",
+        "tags": ["Calibration"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/DetectRoisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "ROIs detected successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DetectRoisResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sports/extract-metadata": {
+      "post": {
+        "operationId": "createExtractMetadataTask",
+        "summary": "Extract Metadata",
+        "description": "Start an async task to extract structured metadata from video using ROI configuration. Returns a task ID for polling.",
+        "tags": ["Metadata Extraction"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtractMetadataRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sports/extract-metadata/{task_id}": {
+      "get": {
+        "operationId": "getExtractMetadataTask",
+        "summary": "Get Metadata Task",
+        "description": "Poll the status of a metadata extraction task and retrieve results when complete.",
+        "tags": ["Metadata Extraction"],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "description": "The task ID returned from the create request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataTaskResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sports/highlights": {
+      "post": {
+        "operationId": "createHighlightsTask",
+        "summary": "Generate Highlights",
+        "description": "Start an async task to generate a highlight reel from video. Returns a task ID for polling.",
+        "tags": ["Highlights"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/HighlightsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskCreatedResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sports/highlights/{task_id}": {
+      "get": {
+        "operationId": "getHighlightsTask",
+        "summary": "Get Highlights Task",
+        "description": "Poll the status of a highlight generation task and retrieve results when complete.",
+        "tags": ["Highlights"],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "description": "The task ID returned from the create request",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task status retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HighlightsTaskResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DetectRoisRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file to analyze (a frame will be extracted for calibration)"
+          },
+          "frame_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alternative: URL to a specific frame/image to analyze"
+          },
+          "elements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoiElement"
+            },
+            "description": "List of elements to detect with their descriptions"
+          },
+          "frame_number": {
+            "type": "integer",
+            "description": "Which frame to extract from video for calibration",
+            "default": 300,
+            "example": 300
+          }
+        },
+        "required": ["elements"]
+      },
+      "RoiElement": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Identifier for this ROI element",
+            "example": "play_clock"
+          },
+          "description": {
+            "type": "string",
+            "description": "Natural language description of what to detect",
+            "example": "The small box showing the play clock (typically 25-40 seconds)"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this element must be found",
+            "default": true
+          }
+        },
+        "required": ["name", "description"]
+      },
+      "DetectRoisResponse": {
+        "type": "object",
+        "properties": {
+          "roi_config": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "description": "Detected ROI coordinates keyed by element name"
+          },
+          "calibration_frame_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to the frame used for calibration"
+          },
+          "visualization_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to annotated frame showing detected ROIs"
+          }
+        },
+        "required": ["roi_config", "calibration_frame_url", "visualization_url"]
+      },
+      "BoundingBox": {
+        "type": "object",
+        "properties": {
+          "y_min": {
+            "type": "integer",
+            "description": "Top edge Y coordinate (pixels from top)"
+          },
+          "x_min": {
+            "type": "integer",
+            "description": "Left edge X coordinate (pixels from left)"
+          },
+          "y_max": {
+            "type": "integer",
+            "description": "Bottom edge Y coordinate"
+          },
+          "x_max": {
+            "type": "integer",
+            "description": "Right edge X coordinate"
+          }
+        },
+        "required": ["y_min", "x_min", "y_max", "x_max"]
+      },
+      "ExtractMetadataRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file to process"
+          },
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Alternative: URL to video file"
+          },
+          "roi_config": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BoundingBox"
+            },
+            "description": "ROI configuration from detect-rois endpoint"
+          },
+          "output_schema": {
+            "type": "object",
+            "description": "JSON Schema defining the structure of events to extract"
+          },
+          "skip_frames": {
+            "type": "integer",
+            "description": "Process every Nth frame for faster processing",
+            "default": 2,
+            "example": 2
+          }
+        },
+        "required": ["roi_config", "output_schema"]
+      },
+      "HighlightsRequest": {
+        "type": "object",
+        "properties": {
+          "video": {
+            "type": "string",
+            "format": "binary",
+            "description": "Video file (1-2 hours, e.g., full football game)"
+          },
+          "metadata": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional play metadata JSON file for enhanced accuracy"
+          },
+          "editorial_instructions": {
+            "type": "string",
+            "description": "Custom instructions for highlight selection",
+            "example": "Focus on touchdowns and big plays"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Target duration of the highlight reel in seconds",
+            "default": 600,
+            "example": 600
+          }
+        },
+        "required": ["video"]
+      },
+      "TaskCreatedResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Unique identifier for the task",
+            "example": "task_abc123xyz"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending"],
+            "description": "Initial task status",
+            "example": "pending"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the task was created",
+            "example": "2024-01-15T10:30:00Z"
+          }
+        },
+        "required": ["task_id", "status", "created_at"]
+      },
+      "MetadataTaskResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task identifier",
+            "example": "task_abc123xyz"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "processing", "completed", "failed"],
+            "description": "Current task status",
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Progress percentage (0-100)",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 100
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the task was created"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the task completed (if finished)"
+          },
+          "result": {
+            "$ref": "#/components/schemas/MetadataResult"
+          },
+          "error": {
+            "$ref": "#/components/schemas/TaskError"
+          }
+        },
+        "required": ["task_id", "status", "progress", "created_at"]
+      },
+      "MetadataResult": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of extracted events matching the provided schema"
+          },
+          "metadata_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL to download the full metadata JSON file"
+          },
+          "video_duration_sec": {
+            "type": "number",
+            "description": "Duration of processed video in seconds"
+          },
+          "events_detected": {
+            "type": "integer",
+            "description": "Total number of events detected"
+          },
+          "processing_stats": {
+            "$ref": "#/components/schemas/ProcessingStats"
+          }
+        }
+      },
+      "HighlightsTaskResponse": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "Task identifier",
+            "example": "task_abc123xyz"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "processing", "completed", "failed"],
+            "description": "Current task status",
+            "example": "completed"
+          },
+          "progress": {
+            "type": "integer",
+            "description": "Progress percentage (0-100)",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 100
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the task was created"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the task completed (if finished)"
+          },
+          "result": {
+            "$ref": "#/components/schemas/HighlightsResult"
+          },
+          "error": {
+            "$ref": "#/components/schemas/TaskError"
+          }
+        },
+        "required": ["task_id", "status", "progress", "created_at"]
+      },
+      "HighlightsResult": {
+        "type": "object",
+        "properties": {
+          "video_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "CDN URL to the generated highlight reel (valid for 24 hours)"
+          },
+          "original_duration_sec": {
+            "type": "number",
+            "description": "Duration of the original video in seconds"
+          },
+          "edited_duration_sec": {
+            "type": "number",
+            "description": "Duration of the highlight reel in seconds"
+          }
+        }
+      },
+      "ProcessingStats": {
+        "type": "object",
+        "properties": {
+          "frames_processed": {
+            "type": "integer",
+            "description": "Total frames analyzed"
+          },
+          "processing_time_sec": {
+            "type": "number",
+            "description": "Time taken to process in seconds"
+          },
+          "fps": {
+            "type": "number",
+            "description": "Source video frame rate"
+          }
+        }
+      },
+      "TaskError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code",
+            "example": "PROCESSING_FAILED"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message",
+            "example": "Failed to process video: invalid format"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}

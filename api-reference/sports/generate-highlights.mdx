@@ -1,0 +1,84 @@
+---
+title: 'Generate Highlights'
+description: 'Start async task to generate highlight reel from video'
+openapi: 'POST /api/v1/sports/highlights'
+---
+
+## POST /api/v1/sports/highlights
+
+Start an async task to generate an AI-powered highlight reel from a full-length sports video. Returns a task ID for polling.
+
+This is an **asynchronous** endpoint - use the task ID to poll for results.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| video | File | Yes | Video file (1-2 hours, e.g., full football game) |
+| metadata | File | No | Play metadata JSON for enhanced accuracy |
+| editorial_instructions | string | No | Custom instructions for highlight selection |
+| duration | integer | No | Target duration in seconds (default: 600) |
+
+### Response
+
+| Field | Description |
+|-------|-------------|
+| task_id | Unique identifier for polling |
+| status | Initial status (`pending`) |
+| created_at | When the task was created |
+
+### Example Request
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
+  -H "Content-Type: multipart/form-data" \
+  -F "video=@football_game.mp4" \
+  -F "duration=900" \
+  -F "editorial_instructions=Focus on touchdowns and big plays"
+```
+
+### Example Request (with metadata)
+
+```bash
+curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
+  -H "Content-Type: multipart/form-data" \
+  -F "video=@football_game.mp4" \
+  -F "metadata=@play_metadata.json" \
+  -F "editorial_instructions=Include crowd reactions"
+```
+
+### Example Response
+
+```json
+{
+  "task_id": "task_def456xyz",
+  "status": "pending",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+```
+
+### What the AI Identifies
+
+Without metadata:
+- Exciting commentary moments
+- Score announcements
+- Crowd reactions
+- Replays and big plays
+
+With metadata (enhanced accuracy):
+- **Scoring plays** with exact timestamps
+- **Turnovers** from possession changes
+- **Red zone plays** from field position data
+- **Game-changing moments** from score differential
+
+### Next Step
+
+Poll the task status using `GET /api/v1/sports/highlights/{task_id}`:
+
+```bash
+curl https://api.usenarrative.ai/api/v1/sports/highlights/task_def456xyz
+```
+
+<Card title="Get Highlights Task" icon="clock" href="/api-reference/sports/get-highlights-task">
+  Poll task status and retrieve results
+</Card>

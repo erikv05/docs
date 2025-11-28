@@ -10,7 +10,7 @@
   },
   "customCss": "/custom.css",
   "favicon": "/favicon.svg",
-  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json", "/api-reference/search-openapi.json"],
+  "openapi": ["/api-reference/narrative-openapi.json", "/api-reference/instinct-openapi.json", "/api-reference/clipping-openapi.json", "/api-reference/search-openapi.json", "/api-reference/sports-openapi.json"],
   "navigation": {
     "tabs": [
       {
@@ -49,18 +49,12 @@
         ]
       },
       {
-        "tab": "Highlights API",
+        "tab": "Hooks API",
         "groups": [
           {
             "group": "Overview",
             "pages": [
               "api-reference/clipping/introduction"
-            ]
-          },
-          {
-            "group": "Highlights",
-            "pages": [
-              "api-reference/clipping/generate-highlights"
             ]
           },
           {
@@ -76,12 +70,36 @@
               "api-reference/clipping/summarize-video",
               "api-reference/clipping/extract-transcript"
             ]
+          }
+        ]
+      },
+      {
+        "tab": "Sports API",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/sports/introduction"
+            ]
           },
           {
-            "group": "Vision",
+            "group": "Calibration",
             "pages": [
-              "api-reference/clipping/detect-rois",
-              "api-reference/clipping/extract-metadata"
+              "api-reference/sports/detect-rois"
+            ]
+          },
+          {
+            "group": "Metadata Extraction",
+            "pages": [
+              "api-reference/sports/extract-metadata",
+              "api-reference/sports/get-metadata-task"
+            ]
+          },
+          {
+            "group": "Highlights",
+            "pages": [
+              "api-reference/sports/generate-highlights",
+              "api-reference/sports/get-highlights-task"
             ]
           }
         ]
