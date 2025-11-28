@@ -83,12 +83,6 @@
             ]
           },
           {
-            "group": "Calibration",
-            "pages": [
-              "api-reference/sports/detect-rois"
-            ]
-          },
-          {
             "group": "Metadata Extraction",
             "pages": [
               "api-reference/sports/extract-metadata",

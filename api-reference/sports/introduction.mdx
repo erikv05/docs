@@ -9,7 +9,6 @@ The Sports API provides AI-powered tools for analyzing broadcast sports video, e
 
 ### Key Features
 
-- **ROI Detection** - AI-powered calibration to identify scoreboard elements
 - **Metadata Extraction** - Extract play-by-play events with precise timestamps
 - **Highlight Generation** - Create AI-curated highlight reels from full games
 - **Async Processing** - Task-based API for long-running operations
@@ -22,7 +21,7 @@ https://api.usenarrative.ai
 
 ### Async Task Pattern
 
-Long-running operations (metadata extraction, highlight generation) use an async pattern:
+Long-running operations use an async pattern:
 
 ```
 ┌──────────────────┐     ┌──────────────────┐     ┌──────────────────┐
@@ -40,34 +39,21 @@ Long-running operations (metadata extraction, highlight generation) use an async
 | `completed` | Task finished, result available |
 | `failed` | Task failed, error details provided |
 
-### Workflow Example
+### Quick Start
 
 ```bash
-# 1. Detect ROIs (sync - fast)
-curl -X POST https://api.usenarrative.ai/api/v1/sports/detect-rois \
-  -F "video=@game.mp4" \
-  -F 'elements=[{"name": "play_clock", "description": "Play clock display"}]'
-
-# 2. Start metadata extraction (async)
-curl -X POST https://api.usenarrative.ai/api/v1/sports/extract-metadata \
-  -F "video=@game.mp4" \
-  -F 'roi_config={...}'
+# 1. Start highlight generation (async)
+curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
+  -F "video=@football_game.mp4" \
+  -F "duration=600" \
+  -F "editorial_instructions=Focus on touchdowns and big plays"
 # Returns: { "task_id": "task_abc123", "status": "pending" }
 
-# 3. Poll for completion
-curl https://api.usenarrative.ai/api/v1/sports/extract-metadata/task_abc123
+# 2. Poll for completion
+curl https://api.usenarrative.ai/api/v1/sports/highlights/task_abc123
 # Returns: { "status": "processing", "progress": 45 }
 # ... wait and poll again ...
-# Returns: { "status": "completed", "result": {...} }
-
-# 4. Start highlight generation (async)
-curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
-  -F "video=@game.mp4" \
-  -F "metadata=@metadata.json"
-# Returns: { "task_id": "task_def456", "status": "pending" }
-
-# 5. Poll for highlights
-curl https://api.usenarrative.ai/api/v1/sports/highlights/task_def456
+# Returns: { "status": "completed", "result": { "video_url": "..." } }
 ```
 
 <Card title="OpenAPI Specification" icon="file-code" href="/api-reference/sports-openapi.json">
