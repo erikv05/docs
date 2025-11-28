@@ -10,6 +10,8 @@ Start an async task to generate an AI-powered highlight reel from a full-length 
 
 This is an **asynchronous** endpoint - use the task ID to poll for results.
 
+**Note:** The system automatically extracts play-by-play metadata from the video unless you supply your own metadata file.
+
 ### Parameters
 
 | Parameter | Type | Required | Description |
@@ -57,19 +59,15 @@ curl -X POST https://api.usenarrative.ai/api/v1/sports/highlights \
 }
 ```
 
-### What the AI Identifies
+### How It Works
 
-Without metadata:
-- Exciting commentary moments
-- Score announcements
-- Crowd reactions
-- Replays and big plays
+The system automatically extracts metadata from the video to identify key moments:
+- **Scoring plays** with precise timestamps
+- **Turnovers** and possession changes
+- **Big plays** and exciting moments
+- **Crowd reactions** and commentary peaks
 
-With metadata (enhanced accuracy):
-- **Scoring plays** with exact timestamps
-- **Turnovers** from possession changes
-- **Red zone plays** from field position data
-- **Game-changing moments** from score differential
+If you supply your own metadata file, the system will use it instead for even greater accuracy.
 
 ### Next Step
 
